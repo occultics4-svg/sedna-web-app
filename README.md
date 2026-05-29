@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SEDNA
 
-## Getting Started
+Energetic charge release technique — a 10-minute web practice for the moment after something just got loud.
 
-First, run the development server:
+Brand: Occultics. Domain: sedna.occultics.ai.
+
+## Current state
+
+This commit contains:
+
+- `/` — landing page (hero, pitch, how it works, pricing, founder, footer)
+- `/app` — 9-screen session flow with breath circle, PNG share card, and `localStorage` persistence
+
+Not yet wired (deferred until the user confirms):
+
+- Supabase auth + cross-device session storage
+- Stripe Checkout, webhook, customer portal
+- `/account` page
+- `/checkout` page (currently `/checkout` only exists as a link target)
+- Resend transactional email
+- Cloudflare Web Analytics tag
+
+`supabase/schema.sql` contains the database schema ready to paste into a fresh Supabase project.
+
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The session flow at `/app` works fully offline — drafts and history live in `localStorage` under `sedna:draft` and `sedna:history`. No external services need to be configured to use it.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Environment
 
-## Learn More
+Copy `.env.example` to `.env.local` and fill values once you are ready to wire Supabase + Stripe + Resend. The current code does not yet read any of these.
 
-To learn more about Next.js, take a look at the following resources:
+## Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Next.js 14 App Router, TypeScript strict, Tailwind CSS
+- Supabase (deferred), Stripe (deferred), Resend (deferred)
+- Target deployment: Cloudflare Pages
