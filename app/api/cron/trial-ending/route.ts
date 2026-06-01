@@ -7,15 +7,23 @@ import { sendTrialEndingEmail } from "@/lib/email";
  * sends the trial-ending email. Idempotent — uses the
  * `trial_ending_email_sent_at` column to avoid re-sending.
  *
- * Schedule: invoke this once per hour via Cloudflare Cron Triggers
- * (set up during phase 2.4 deploy).
+ * Schedule: invoked daily by Vercel Cron Jobs (see vercel.json). Vercel
+ * sends GET with `Authorization: Bearer <CRON_SECRET>` automatically.
  *
  * Auth: requires the CRON_SECRET env var as a Bearer token, so random
  * internet visitors can't trigger sends.
  */
 export const dynamic = "force-dynamic";
 
+export async function GET(request: Request) {
+  return handle(request);
+}
+
 export async function POST(request: Request) {
+  return handle(request);
+}
+
+async function handle(request: Request) {
   const secret = process.env.CRON_SECRET;
   if (!secret) {
     return NextResponse.json(
