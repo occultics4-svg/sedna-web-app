@@ -42,3 +42,4 @@ Copy `.env.example` to `.env.local` and fill values once you are ready to wire S
 - Next.js 14 App Router, TypeScript strict, Tailwind CSS
 - Supabase (deferred), Stripe (deferred), Resend (deferred)
 - Target deployment: Cloudflare Pages
+- Trigger Vercel auto-deploy
