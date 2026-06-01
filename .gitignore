@@ -34,3 +34,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Production secrets PDF — never commit
+sedna-production-secrets.pdf
