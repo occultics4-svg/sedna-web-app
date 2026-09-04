@@ -96,31 +96,12 @@ export default function HomePage() {
           {landing.pricing.heading}
         </h2>
         <div className="rounded-2xl bg-bg-card border border-bg-elev p-8 sm:p-12">
-          <div className="grid sm:grid-cols-2 gap-8 mb-8">
-            <div>
-              <div className="text-text-muted text-sm uppercase tracking-wider mb-2">
-                {landing.pricing.monthlyLabel}
-              </div>
-              <div className="font-serif text-4xl">
-                {landing.pricing.monthlyPrice}
-              </div>
-              <div className="text-text-hint text-sm mt-1">
-                {landing.pricing.monthlyPer}
-              </div>
-            </div>
-            <div>
-              <div className="text-text-muted text-sm uppercase tracking-wider mb-2">
-                {landing.pricing.annualLabel}
-              </div>
-              <div className="font-serif text-4xl">
-                {landing.pricing.annualPrice}
-                <span className="text-xl text-text-muted">
-                  {landing.pricing.annualPer}
-                </span>
-              </div>
-              <div className="text-accent text-sm mt-1">
-                {landing.pricing.annualSavings}
-              </div>
+          <div className="text-center mb-8">
+            <div className="font-serif text-5xl">
+              {landing.pricing.price}
+              <span className="text-xl text-text-muted ml-2">
+                {landing.pricing.per}
+              </span>
             </div>
           </div>
           <ul className="space-y-2 text-text-muted text-sm mb-8">

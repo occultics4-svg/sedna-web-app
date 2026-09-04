@@ -102,7 +102,9 @@ async function SignedInView({
             Welcome to SEDNA.
           </div>
           <p className="text-text-muted text-sm mt-1">
-            Your 3-day free trial is active. Your sessions will now save here.
+            {sub?.tier === "lifetime"
+              ? "You have lifetime access. Your sessions will now save here."
+              : "Your 3-day free trial is active. Your sessions will now save here."}
           </p>
         </div>
       )}
@@ -142,15 +144,14 @@ function NotSubscribedAccount({ status }: { status: string | null }) {
               : "Save your sessions across devices"}
           </h2>
           <p className="text-text-muted leading-relaxed">
-            Start your 3-day free trial. $14.99/month or $89/year. Cancel
-            anytime in your account.
+            Get lifetime access for $89, once. No subscription, no renewal.
           </p>
         </div>
         <Link
           href="/checkout"
           className="inline-block px-6 py-3 rounded-full bg-accent text-bg font-medium hover:bg-accent-hover transition"
         >
-          Start 3-day free trial
+          Get lifetime access — $89
         </Link>
       </div>
 
@@ -178,7 +179,7 @@ async function SubscribedAccount({
 }: {
   sub: {
     status: string;
-    tier: "monthly" | "annual";
+    tier: "monthly" | "annual" | "lifetime";
     trial_end: string | null;
     current_period_end: string | null;
     cancel_at_period_end: boolean;
@@ -194,10 +195,11 @@ async function SubscribedAccount({
 
   const list: SessionRow[] = sessions ?? [];
 
-  const onTrial = sub.status === "trialing";
+  const isLifetime = sub.tier === "lifetime";
+  const onTrial = !isLifetime && sub.status === "trialing";
   const trialEndsAt = onTrial && sub.trial_end ? new Date(sub.trial_end) : null;
   const renewsAt =
-    !onTrial && sub.current_period_end
+    !isLifetime && !onTrial && sub.current_period_end
       ? new Date(sub.current_period_end)
       : null;
 
@@ -206,19 +208,25 @@ async function SubscribedAccount({
       <div className="rounded-2xl bg-bg-card border border-bg-elev p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="space-y-1">
           <div className="text-accent text-xs uppercase tracking-[0.25em]">
-            {onTrial ? "Free trial" : `${sub.tier} plan`}
+            {isLifetime
+              ? "Lifetime access"
+              : onTrial
+                ? "Free trial"
+                : `${sub.tier} plan`}
           </div>
           <div className="text-text-muted text-sm">
-            {onTrial && trialEndsAt
-              ? `Trial ends ${trialEndsAt.toLocaleDateString(undefined, {
-                  dateStyle: "medium",
-                })}. ${sub.cancel_at_period_end ? "Will not renew." : "Renews automatically."}`
-              : sub.cancel_at_period_end
-                ? `Access continues until ${renewsAt?.toLocaleDateString(undefined, { dateStyle: "medium" }) ?? "period end"}, then ends.`
-                : `Renews ${renewsAt?.toLocaleDateString(undefined, { dateStyle: "medium" }) ?? "automatically"}.`}
+            {isLifetime
+              ? "One-time purchase. Full access, forever — nothing to renew or cancel."
+              : onTrial && trialEndsAt
+                ? `Trial ends ${trialEndsAt.toLocaleDateString(undefined, {
+                    dateStyle: "medium",
+                  })}. ${sub.cancel_at_period_end ? "Will not renew." : "Renews automatically."}`
+                : sub.cancel_at_period_end
+                  ? `Access continues until ${renewsAt?.toLocaleDateString(undefined, { dateStyle: "medium" }) ?? "period end"}, then ends.`
+                  : `Renews ${renewsAt?.toLocaleDateString(undefined, { dateStyle: "medium" }) ?? "automatically"}.`}
           </div>
         </div>
-        <ManageSubscriptionButton />
+        {!isLifetime && <ManageSubscriptionButton />}
       </div>
 
       <div className="space-y-3">

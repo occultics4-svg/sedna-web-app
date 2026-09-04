@@ -44,16 +44,16 @@ export const copy = {
   landing: {
     nav: {
       signIn: "Sign in",
-      startTrialShort: "Start free trial",
+      startTrialShort: "Get lifetime access",
     },
     hero: {
       titleLineA: "Release the stuck energy.",
       titleLineB: "Create the reality you want.",
       subline:
         "A 10-minute web practice for the moment after something just got loud.",
-      ctaTrial: "Start 3-day free trial",
+      ctaTrial: "Get lifetime access — $89",
       ctaHow: "See how it works",
-      pricingHint: "$14.99/month or $89/year after trial. Cancel anytime.",
+      pricingHint: "$89 once. Lifetime access — no subscription, no renewal.",
     },
     pitch: {
       heading: "The 10-minute window",
@@ -83,21 +83,15 @@ export const copy = {
       ],
     },
     pricing: {
-      heading: "One practice. Two ways to pay.",
-      monthlyLabel: "Monthly",
-      monthlyPrice: "$14.99",
-      monthlyPer: "per month",
-      annualLabel: "Annual",
-      annualPrice: "$89",
-      annualPer: "/yr",
-      annualSavings: "Save ~50%",
+      heading: "One practice. One price.",
+      price: "$89",
+      per: "one-time",
       features: [
-        "· 3-day free trial. Card required.",
+        "· Full access, forever — no subscription, no renewal.",
         "· Save sessions across devices.",
         "· See your patterns over time.",
-        "· Cancel anytime in your account.",
       ],
-      cta: "Start 3-day free trial",
+      cta: "Get lifetime access",
       finePrint:
         "No refunds. EU/UK 14-day withdrawal right waived for immediate access. Full terms at checkout.",
     },
@@ -261,8 +255,8 @@ export const copy = {
       title: "Now go and be that person.",
       paywallTitle: "Save your sessions",
       paywallBody:
-        "Save your sessions across devices and see your patterns over time — start your 3-day free trial. $14.99/month or $89/year. Cancel anytime.",
-      paywallCta: "Start 3-day free trial",
+        "Save your sessions across devices and see your patterns over time — get lifetime access for $89, once.",
+      paywallCta: "Get lifetime access",
       newSessionCta: "Start a new session",
     },
   },
@@ -294,6 +288,11 @@ export const copy = {
   // Transactional emails
   // Edit subject lines / body copy here. Templates pull text from this
   // module — change once and every email updates.
+  //
+  // Note: trialEnding / cancellation / paymentFailed only ever fire for
+  // subscription (monthly/annual) rows -- lifetime purchases never reach
+  // "trialing" status and have no Stripe subscription to cancel or fail a
+  // charge on, so these are unaffected by the lifetime tier and unchanged.
   // ───────────────────────────────────────────────────────────────────
   emails: {
     fromName: "SEDNA",
@@ -360,30 +359,20 @@ export const copy = {
   // to opt out of the 14-day cooling-off period for immediate access.
   // ───────────────────────────────────────────────────────────────────
   checkout: {
-    title: "Start your 3-day free trial",
+    title: "Get lifetime access",
     subtitle:
-      "Save your sessions across devices and see your patterns over time.",
-    monthly: {
-      label: "Monthly",
-      price: "$14.99",
-      per: "/month",
-    },
-    annual: {
-      label: "Annual",
-      price: "$89",
-      per: "/year",
-      savings: "Save ~50%",
-    },
-    termsHeading: "By starting your free trial, you agree to the following:",
+      "One payment. Full access, forever — save your sessions across devices and see your patterns over time.",
+    price: "$89",
+    per: "one-time",
+    termsHeading: "By purchasing lifetime access, you agree to the following:",
     termsBullets: [
-      "Your 3-day free trial begins immediately. On day 4, your card will be charged $14.99/month (or $89/year if annual selected) unless you cancel.",
-      "You can cancel anytime in your account settings. Cancellation stops all future charges. You retain access until the end of your paid period.",
-      "No refunds. All charges are non-refundable, including partial months/years.",
+      "You will be charged $89 once. This is a one-time payment, not a subscription — you will not be charged again.",
+      "No refunds. All charges are non-refundable.",
       "EU/UK users: I waive my 14-day withdrawal right under EU Directive 2011/83/EU and UK Consumer Contracts Regulations 2013, in exchange for immediate access to the service.",
     ],
     termsAgreeLabel: "I have read and agree to these terms.",
-    cta: "Start free trial",
-    signInPrompt: "Sign in to start your trial",
+    cta: "Get lifetime access — $89",
+    signInPrompt: "Sign in to get lifetime access",
     signInCta: "Go to sign in",
   },
 } as const;

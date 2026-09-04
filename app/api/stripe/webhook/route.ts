@@ -104,14 +104,59 @@ function priceIdForSubscription(sub: Stripe.Subscription): string | null {
 }
 
 async function onCheckoutCompleted(session: Stripe.Checkout.Session) {
-  // For mode='subscription', the subscription exists by the time this fires
-  // and we'll soon get customer.subscription.created / updated as well.
-  // We do nothing here except verify it's ours.
   const userId = sednaUserIdFrom(session);
   if (!userId) return; // not a SEDNA checkout
-  // The actual upsert into our subscriptions table happens on
-  // customer.subscription.created/updated below, which carries the full
-  // subscription state including status, trial_end, and current_period_end.
+
+  // For mode='subscription', the Subscription object exists by the time
+  // this fires and we'll soon get customer.subscription.created/updated as
+  // well — that carries the full subscription state (status, trial_end,
+  // current_period_end), so we do nothing here except let it fall through.
+  if (session.mode === "subscription") return;
+
+  // For mode='payment' (one-time lifetime purchase), there is no
+  // Subscription object and no follow-up event — this is the ONLY place
+  // access gets granted, so we upsert directly here.
+  if (session.mode !== "payment") return;
+
+  const tier = session.metadata?.sedna_tier;
+  if (tier !== "lifetime") return; // defensive: not a recognized one-time SKU
+
+  const customerId =
+    typeof session.customer === "string"
+      ? session.customer
+      : session.customer?.id;
+
+  if (!customerId) {
+    console.error(
+      "[stripe/webhook] lifetime checkout.session.completed had no customer id",
+      { sessionId: session.id }
+    );
+    return;
+  }
+
+  const admin = createAdminClient();
+  const { error } = await admin.from("subscriptions").upsert(
+    {
+      user_id: userId,
+      stripe_customer_id: customerId,
+      stripe_subscription_id: null,
+      status: "lifetime",
+      tier: "lifetime",
+      trial_end: null,
+      current_period_end: null,
+      cancel_at_period_end: false,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "user_id" }
+  );
+
+  if (error) {
+    console.error(
+      "[stripe/webhook] lifetime subscriptions upsert failed:",
+      error
+    );
+    throw error; // triggers a Stripe retry
+  }
 }
 
 async function onSubscriptionChanged(sub: Stripe.Subscription) {

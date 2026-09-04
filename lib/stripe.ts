@@ -35,16 +35,27 @@ export const stripe = new Proxy({} as Stripe, {
 
 export const PRICE_MONTHLY = process.env.STRIPE_PRICE_MONTHLY ?? "";
 export const PRICE_ANNUAL = process.env.STRIPE_PRICE_ANNUAL ?? "";
+// One-time lifetime-access price. Must be a Stripe Price configured as
+// "One time" (not recurring) -- used with Checkout mode "payment", not
+// "subscription".
+export const PRICE_LIFETIME = process.env.STRIPE_PRICE_LIFETIME ?? "";
 
 /**
  * The set of SEDNA-specific Stripe price IDs. The webhook handler uses this
  * to filter events for subscriptions tied to OTHER products in the same
  * Stripe account (since this account hosts Adriana's other apps too).
  */
-export const SEDNA_PRICE_IDS = new Set<string>([PRICE_MONTHLY, PRICE_ANNUAL]);
+export const SEDNA_PRICE_IDS = new Set<string>([
+  PRICE_MONTHLY,
+  PRICE_ANNUAL,
+  PRICE_LIFETIME,
+]);
 
-export function tierForPriceId(priceId: string): "monthly" | "annual" | null {
+export function tierForPriceId(
+  priceId: string
+): "monthly" | "annual" | "lifetime" | null {
   if (priceId === PRICE_MONTHLY) return "monthly";
   if (priceId === PRICE_ANNUAL) return "annual";
+  if (priceId === PRICE_LIFETIME) return "lifetime";
   return null;
 }

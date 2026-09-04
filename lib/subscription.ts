@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
  */
 export type SubscriptionState = {
   status: string;
-  tier: "monthly" | "annual";
+  tier: "monthly" | "annual" | "lifetime";
   trial_end: string | null;
   current_period_end: string | null;
   cancel_at_period_end: boolean;
@@ -16,12 +16,15 @@ export type SubscriptionState = {
  * /account session list, etc). 'trialing' means the user is on the 3-day
  * free trial — they get full access. 'active' means they're being charged
  * and current. 'past_due' is grace period — we still allow access so the
- * user can update their card via the customer portal.
+ * user can update their card via the customer portal. 'lifetime' means a
+ * one-time lifetime-access purchase — permanent, no trial, no renewal, and
+ * no customer-portal "manage subscription" flow (there's nothing to manage).
  */
 export const PAID_STATUSES = new Set<string>([
   "trialing",
   "active",
   "past_due",
+  "lifetime",
 ]);
 
 export function isPaid(sub: SubscriptionState | null): boolean {
